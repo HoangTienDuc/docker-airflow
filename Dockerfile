@@ -32,9 +32,8 @@ RUN set -ex \
         libpq-dev \
         git \
     ' \
-    && apt-get update -yqq \
-    && apt-get upgrade -yqq \
-    && apt-get install -yqq --no-install-recommends \
+    && apt-get update -y \
+    && apt-get install -y --no-install-recommends \
         $buildDeps \
         freetds-bin \
         build-essential \
@@ -48,7 +47,6 @@ RUN set -ex \
     && locale-gen \
     && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
     && useradd -ms /bin/bash -d ${AIRFLOW_USER_HOME} ${AIRFLOW_USER} \
-    && usermod -a -G sudo ${AIRFLOW_USER} \
     && pip install -U pip setuptools wheel \
     && pip install pytz \
     && pip install pyOpenSSL \
@@ -75,7 +73,7 @@ RUN chown -R airflow: ${AIRFLOW_USER_HOME}
 
 EXPOSE 8080 5555 8793
 
-USER airflow
+# USER airflow
 WORKDIR ${AIRFLOW_USER_HOME}
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["webserver"]
