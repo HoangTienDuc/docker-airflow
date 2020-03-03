@@ -1,5 +1,4 @@
 FROM python:3.7-slim-buster
-LABEL maintainer="Puckel_"
 
 # Never prompt the user for choices on installation/configuration of packages
 ENV DEBIAN_FRONTEND noninteractive
@@ -49,8 +48,8 @@ RUN set -ex \
     && locale-gen \
     && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
     && useradd -ms /bin/bash -d ${AIRFLOW_USER_HOME} ${AIRFLOW_USER} \
-    && export DOCKER_GROUP=$(ls -al /var/run/docker.sock  | awk '{print $4}')
-    && useradd ${AIRFLOW_USER} ${DOCKER_GROUP}
+    && export DOCKER_GROUP=$(ls -al /var/run/docker.sock  | awk '{print $4}') \
+    && useradd ${AIRFLOW_USER} ${DOCKER_GROUP} \
     && pip install -U pip setuptools wheel \
     && pip install pytz \
     && pip install pyOpenSSL \
