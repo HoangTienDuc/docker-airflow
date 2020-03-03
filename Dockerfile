@@ -1,9 +1,3 @@
-# VERSION 1.10.9
-# AUTHOR: Matthieu "Puckel_" Roisil
-# DESCRIPTION: Basic Airflow container
-# BUILD: docker build --rm -t puckel/docker-airflow .
-# SOURCE: https://github.com/puckel/docker-airflow
-
 FROM python:3.7-slim-buster
 LABEL maintainer="Puckel_"
 
@@ -17,6 +11,7 @@ ARG AIRFLOW_USER_HOME=/usr/local/airflow
 ARG AIRFLOW_DEPS=""
 ARG PYTHON_DEPS=""
 ENV AIRFLOW_HOME=${AIRFLOW_USER_HOME}
+ENV AIRFLOW_USER=airflow
 
 # Define en_US.
 ENV LANGUAGE en_US.UTF-8
@@ -53,7 +48,9 @@ RUN set -ex \
     && sed -i 's/^# en_US.UTF-8 UTF-8$/en_US.UTF-8 UTF-8/g' /etc/locale.gen \
     && locale-gen \
     && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
-    && useradd -ms /bin/bash -d ${AIRFLOW_USER_HOME} airflow \
+    && useradd -ms /bin/bash -d ${AIRFLOW_USER_HOME} ${AIRFLOW_USER} \
+    && export DOCKER_GROUP=$(ls -al /var/run/docker.sock  | awk '{print $4}')
+    && useradd ${AIRFLOW_USER} ${DOCKER_GROUP}
     && pip install -U pip setuptools wheel \
     && pip install pytz \
     && pip install pyOpenSSL \
