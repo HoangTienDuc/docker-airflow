@@ -47,8 +47,8 @@ RUN set -ex \
     && sed -i 's/^# en_US.UTF-8 UTF-8$/en_US.UTF-8 UTF-8/g' /etc/locale.gen \
     && locale-gen \
     && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
-    && export DOCKER_GROUP=$(ls -al /var/run/docker.sock  | awk '{print $4}') \
-    && useradd -ms /bin/bash -d ${AIRFLOW_USER_HOME} -G ${DOCKER_GROUP} ${AIRFLOW_USER} \
+    && useradd -ms /bin/bash -d ${AIRFLOW_USER_HOME} ${AIRFLOW_USER} \
+    && usermod -a -G sudo ${AIRFLOW_USER} \
     && pip install -U pip setuptools wheel \
     && pip install pytz \
     && pip install pyOpenSSL \
